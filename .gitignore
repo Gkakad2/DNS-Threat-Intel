@@ -1,0 +1,14 @@
+# Docker
+*.tar
+
+# Logs
+*.log
+
+# Temp
+*.tmp
+
+# OS
+.DS_Store
+
+# Large feeds (optional if needed)
+parser/feeds/*.json

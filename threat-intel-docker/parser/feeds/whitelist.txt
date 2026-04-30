@@ -1,0 +1,5 @@
+google.com
+amazon.in
+cloudflare.com
+akamai.net
+cloudfront.net

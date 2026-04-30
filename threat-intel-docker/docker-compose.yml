@@ -1,0 +1,8 @@
+services:
+  dns-parser:
+    build: ./parser
+    container_name: dns-parser
+    volumes:
+      - /var/log/named:/logs
+      - ./parser/blocked_domains.txt:/app/blocked_domains.txt
+    restart: unless-stopped
