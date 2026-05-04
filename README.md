@@ -17,20 +17,20 @@ It helps identify:
 
 ---
 
-## 🏗️ Architecture
 
+## 🏗️ Architecture
 
 ```mermaid
 flowchart TD
-A[Client / Attacker VM] --> B[BIND DNS Resolver (RPZ Enabled)]
-B --> C[DNS Query Logging (/var/log/named/query.log)]
+A[Client / Attacker VM] --> B[BIND DNS Resolver RPZ Enabled]
+B --> C[DNS Query Logging /var/log/named/query.log]
 C --> D[Docker Threat Parser Engine]
-D --> E[IOC Matching Engine (URLHaus | ThreatFox | OpenPhish)]
+D --> E[IOC Matching Engine URLHaus ThreatFox OpenPhish]
 E --> F[Decision Engine]
 F -->|Clean| G[Allow DNS Response]
-F -->|Malicious| H[Block / Sinkhole / NXDOMAIN]
+F -->|Malicious| H[Block Sinkhole NXDOMAIN]
 H --> I[RPZ Enforcement Layer]
-I --> J[Logging & Monitoring (docker logs + alerts)]
+I --> J[Logging Monitoring docker logs alerts]
 
 ## 📁 Project Structure
 
