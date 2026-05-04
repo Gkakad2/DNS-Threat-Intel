@@ -1,163 +1,166 @@
-# DNS Threat Intelligence Pipeline (RPZ + Sinkhole + IOC Feeds)
-
-A containerized DNS security system that detects, classifies, and blocks malicious domains in real-time using threat intelligence feeds, BIND RPZ, and a DNS log-based detection engine.
+# 🛡️ DNS Threat Intelligence Pipeline (RPZ + Sinkhole + IOC Detection)
 
 ---
 
-## 🚀 Overview
+## 📌 Overview
 
-This project builds a DNS-based threat detection and prevention system that:
+This project is a **DNS-based Threat Intelligence & Intrusion Prevention System (DNS-IPS)** that detects malicious domains in real time using **IOC threat feeds** and enforces blocking using:
 
-- Monitors DNS queries in real-time  
-- Matches domains against IOC threat feeds  
-- Identifies malicious domains (phishing, malware, C2, etc.)  
-- Blocks threats using BIND RPZ or Sinkhole responses  
-- Runs fully in Docker for easy deployment  
+- 🧠 BIND RPZ (Response Policy Zones)
+- 🕳️ Sinkhole redirection
+- 📊 Real-time DNS log analysis (Docker-based parser)
+
+It helps identify:
+- 🎯 Phishing domains  
+- 🎯 Malware domains  
+- 🎯 Command & Control (C2) infrastructure  
 
 ---
 
-## 🧠 Architecture
+## 🏗️ Architecture
 
-Client Devices (VM / Laptop)
-        │
-        ▼
-BIND DNS Server (RPZ Enabled Resolver)
-=======
-BIND DNS Server (RPZ Enabled)
-        │
-        │  logs → /var/log/named/query.log
-        ▼
-DNS Log Collection Layer
-        │
-        ▼
-DNS Threat Parser (Docker Container)
-        │
-        ├── IOC Feed Engine
-        │     ├─ URLHaus
-        │     ├─ ThreatFox
-        │     ├─ OpenPhish
-=======
-        │     - URLHaus
-        │     - ThreatFox
-        │     - OpenPhish
-        │
-        ├── Whitelist Filter
-        │
-        ▼
-Decision Engine
-        ├── CLEAN → allow DNS response
-        └── MALICIOUS → block / sinkhole / RPZ
-        │
-        ▼
-Response Enforcement Layer
-        ├── BIND RPZ Zone Update
-        ├── Sinkhole Redirect (fake IP)
-        └── NXDOMAIN Response
-        │
-        ▼
-Logging & Monitoring
-        ├── docker logs dns-parser
-        ├── BIND query logs
-        └── IOC match reporting
-=======
-   ├── CLEAN → allow DNS response
-   └── MALICIOUS → block / sinkhole / RPZ
-        │
-        ▼
-Response Enforcement Layer
-   ├── RPZ DNS blocking
-   ├── Sinkhole redirect (fake IP)
-   └── NXDOMAIN response (optional)
-        │
-        ▼
-Logging & Monitoring
-   ├── docker logs dns-parser
-   ├── BIND query logs
-   └── IOC match reports
+
+🖥️ Client / Attacker VM
+│
+│ DNS Query (Port 53 / 5354)
+▼
+🌐 BIND DNS Resolver (RPZ Enabled)
+│
+│ logs all queries
+▼
+📄 /var/log/named/query.log
+│
+▼
+🐳 Docker Threat Parser Engine
+│
+├── 📥 Reads DNS logs
+├── 🔍 Extracts domains
+├── 🧠 Matches IOC feeds
+│ ├── URLHaus
+│ ├── ThreatFox
+│ └── OpenPhish
+│
+▼
+⚙️ Decision Engine
+│
+├── ✅ CLEAN → Allow DNS response
+└── ❌ MALICIOUS → Block / Sinkhole / NXDOMAIN
+│
+▼
+🚫 Enforcement Layer (DNS Security Actions)
+├── 🛑 RPZ Blocking
+├── 🕳️ Sinkhole Redirect
+└── 🚫 NXDOMAIN Response
+│
+▼
+📊 Logging & Monitoring
+├── docker logs dns-parser
+├── query classification logs
+└── threat detection output
+
 
 ---
 
 ## ⚙️ Features
 
-- Real-time DNS traffic inspection  
-- IOC-based threat detection engine  
-- RPZ-based DNS blocking (inline IPS behavior)  
-- Sinkhole integration for malware analysis  
-- Fully containerized deployment (Docker)  
-- External IOC feed support (URLHaus, ThreatFox, OpenPhish)  
-- Whitelist filtering for trusted domains  
-- Full DNS query logging and visibility  
-=======
-- Dockerized architecture  
-- External IOC feed support (URLHaus, ThreatFox, OpenPhish)  
-- Whitelist filtering  
-- Full DNS query logging  
->>>>>>> d6be235 (Add README and scripts for DNS Threat Intel pipeline)
+- ⚡ Real-time DNS traffic monitoring
+- 🧠 IOC-based threat detection engine
+- 🛑 RPZ-based DNS blocking (inline IPS behavior)
+- 🕳️ Sinkhole redirection for malware analysis
+- 🐳 Fully containerized architecture (Docker)
+- 📡 External threat intelligence feeds integration
+- 📋 Whitelist-based domain bypass control
+- 📊 DNS query logging & visibility
 
 ---
 
-## 🏗️ Project Structure
+## 📁 Project Structure
+
 
 DNS-Threat-Intel/
 │
-├── README.md
-├── LICENSE
-├── .gitignore
+├── 🐳 docker-compose.yml
+├── 🧱 parser/
+│ ├── dns_parser.sh
+│ ├── Dockerfile
+│ ├── update_feeds.sh
+│ └── feeds/
+│ ├── urlhaus.txt
+│ ├── threatfox.txt
+│ └── openphish.txt
 │
-├── docs/
-│   ├── architecture.md
-│   ├── architecture.png
-│   ├── test-plan.md
-│   └── threat-model.md
-│
-├── src/
-│   ├── parser/
-│   │   ├── dns_parser.sh
-│   │   ├── rpz_engine.sh
-│   │   ├── sinkhole_handler.sh
-│   │   └── utils.sh
-│   │
-│   ├── feeds/
-│   │   ├── update_feeds.sh
-│   │   ├── feed_loader.sh
-│   │   └── whitelist.txt
-│   │
-│   └── config/
-│       ├── rpz.zone
-│       ├── named.conf.local
-│       └── dns_config.conf
-│
-├── docker/
-│   ├── docker-compose.yml
-│   ├── Dockerfile
-│   └── entrypoint.sh
-│
-├── tests/
-│   ├── test_dns.sh
-│   ├── test_malicious_domains.txt
-│   └── test_clean_domains.txt
-│
-├── logs/
-│   └── .gitkeep
-│
-├── data/
-│   ├── blocked_domains.txt
-│   ├── ioc_cache.db
-│   └── sinkhole.log
-│
-└── scripts/
-    ├── setup.sh
-    ├── install_dependencies.sh
-    ├── run.sh
-    └── cleanup.sh
+├── 🚫 blocked_domains.txt
+├── 🧪 scripts/
+│ └── test.sh
+└── 📊 logs/
+
 
 ---
 
-## ⚙️ Installation
+## 🧪 Testing Guide
 
-### 1. Clone repository
-=======
-### Clone repository
-```bash
-git clone https://github.com/<your-username>/DNS-Threat-Intel.git
-cd DNS-Threat-Intel
+### ✅ Test Clean Domain
+
+dig google.com @<DNS_SERVER_IP> -p 5354
+
+
+### ❌ Test Malicious Domain
+
+dig evil-test.com @<DNS_SERVER_IP> -p 5354
+
+
+### Expected Output
+
+| Domain Type | Result |
+|------------|--------|
+| Clean Domain | 🌐 Resolved normally |
+| Malicious Domain | 🚫 Blocked / Sinkholed |
+
+---
+
+## 📊 Logs & Monitoring
+
+### 🧾 DNS Logs
+
+tail -f /var/log/named/query.log
+
+
+### 🐳 Parser Logs
+
+docker logs -f dns-parser
+
+
+---
+
+## 🚀 Deployment
+
+### Build & Run System
+
+docker compose up --build -d
+
+
+### Restart System
+
+docker compose restart
+
+
+---
+
+## 🧠 Security Logic
+
+- 📥 DNS queries are captured from BIND logs
+- 🔍 Domains are extracted and normalized
+- 🧠 Matched against IOC threat feeds
+- ⚙️ Decision engine classifies traffic:
+  - CLEAN → Allowed
+  - IOC MATCH → Blocked
+- 🚫 RPZ or Sinkhole action applied instantly
+
+---
+
+## 👨‍💻 Author
+
+**DNS Threat Intelligence Pipeline Project**  
+Built for SOC / Threat Detection / DNS Security Research
+
+---
