@@ -146,8 +146,6 @@ DNS-Threat-Intel/
 
 # 🧪 Testing Methodology
 
-## 🧪 Testing
-
 ### ✅ Test Clean Domain
 ```bash
 dig google.com @<DNS_SERVER_IP> -p 5354
