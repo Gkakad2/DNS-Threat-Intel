@@ -19,15 +19,13 @@ It helps identify:
 
 ## 🏗️ Architecture
 
-## 🏗️ Architecture
-
 ```mermaid
 flowchart TD
 
 A[Client / Attacker VM] --> B[BIND DNS Resolver (RPZ Enabled)]
 B --> C[DNS Query Logging (/var/log/named/query.log)]
 C --> D[Docker Threat Parser Engine]
-D --> E[IOC Matching Engine]
+D --> E[IOC Matching Engine (URLHaus | ThreatFox | OpenPhish)]
 E --> F[Decision Engine]
 
 F -->|Clean| G[Allow DNS Response]
@@ -35,19 +33,9 @@ F -->|Malicious| H[Block / Sinkhole / NXDOMAIN]
 
 H --> I[RPZ Enforcement Layer]
 I --> J[Logging & Monitoring]
+## 🏗️ Architecture
 
-## ⚙️ Features
 
-- ⚡ Real-time DNS traffic monitoring
-- 🧠 IOC-based threat detection engine
-- 🛑 RPZ-based DNS blocking (inline IPS behavior)
-- 🕳️ Sinkhole redirection for malware analysis
-- 🐳 Fully containerized architecture (Docker)
-- 📡 External threat intelligence feeds integration
-- 📋 Whitelist-based domain bypass control
-- 📊 DNS query logging & visibility
-
----
 
 ## 📁 Project Structure
 
