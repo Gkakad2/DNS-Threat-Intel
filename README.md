@@ -22,6 +22,8 @@ Client Devices (VM / Laptop)
         │
         ▼
 BIND DNS Server (RPZ Enabled Resolver)
+=======
+BIND DNS Server (RPZ Enabled)
         │
         │  logs → /var/log/named/query.log
         ▼
@@ -34,6 +36,10 @@ DNS Threat Parser (Docker Container)
         │     ├─ URLHaus
         │     ├─ ThreatFox
         │     ├─ OpenPhish
+=======
+        │     - URLHaus
+        │     - ThreatFox
+        │     - OpenPhish
         │
         ├── Whitelist Filter
         │
@@ -53,6 +59,21 @@ Logging & Monitoring
         ├── docker logs dns-parser
         ├── BIND query logs
         └── IOC match reporting
+=======
+   ├── CLEAN → allow DNS response
+   └── MALICIOUS → block / sinkhole / RPZ
+        │
+        ▼
+Response Enforcement Layer
+   ├── RPZ DNS blocking
+   ├── Sinkhole redirect (fake IP)
+   └── NXDOMAIN response (optional)
+        │
+        ▼
+Logging & Monitoring
+   ├── docker logs dns-parser
+   ├── BIND query logs
+   └── IOC match reports
 
 ---
 
@@ -66,6 +87,12 @@ Logging & Monitoring
 - External IOC feed support (URLHaus, ThreatFox, OpenPhish)  
 - Whitelist filtering for trusted domains  
 - Full DNS query logging and visibility  
+=======
+- Dockerized architecture  
+- External IOC feed support (URLHaus, ThreatFox, OpenPhish)  
+- Whitelist filtering  
+- Full DNS query logging  
+>>>>>>> d6be235 (Add README and scripts for DNS Threat Intel pipeline)
 
 ---
 
@@ -129,6 +156,8 @@ DNS-Threat-Intel/
 ## ⚙️ Installation
 
 ### 1. Clone repository
+=======
+### Clone repository
 ```bash
 git clone https://github.com/<your-username>/DNS-Threat-Intel.git
 cd DNS-Threat-Intel
