@@ -32,6 +32,7 @@ F -->|Malicious| H[Block Sinkhole NXDOMAIN]
 H --> I[RPZ Enforcement Layer]
 I --> J[Logging Monitoring docker logs alerts]
 
+
 ## 📁 Project Structure
 
 
