@@ -19,45 +19,67 @@ It helps identify:
 
 ## 🏗️ Architecture
 
+┌──────────────────────────────────────────────┐
+│            🖥️ Client / Attacker VM           │
+│        (Browser / dig / nslookup)           │
+└──────────────────────┬───────────────────────┘
+                       │ DNS Query (53 / 5354)
+                       ▼
+┌──────────────────────────────────────────────┐
+│        🌐 BIND DNS Resolver (RPZ Enabled)    │
+│  - Handles DNS resolution                    │
+│  - Applies RPZ policy rules                  │
+│  - Logs all queries                          │
+└──────────────────────┬───────────────────────┘
+                       │
+                       ▼
+┌──────────────────────────────────────────────┐
+│        📄 DNS Query Logging Layer            │
+│     /var/log/named/query.log                │
+└──────────────────────┬───────────────────────┘
+                       │ (Mounted into Docker)
+                       ▼
+┌──────────────────────────────────────────────┐
+│     🐳 DNS Threat Parser Engine (Docker)     │
+│                                              │
+│  1. Reads DNS logs                           │
+│  2. Extracts queried domains                 │
+│  3. Normalizes traffic                       │
+│  4. Matches against IOC feeds                │
+│                                              │
+│  IOC Sources:                                │
+│   - URLHaus                                  │
+│   - ThreatFox                                │
+│   - OpenPhish                                │
+└──────────────────────┬───────────────────────┘
+                       │
+                       ▼
+┌──────────────────────────────────────────────┐
+│            ⚙️ Decision Engine                │
+│                                              │
+│  ┌───────────────┬────────────────────────┐  │
+│  │ CLEAN         │ MALICIOUS              │  │
+│  │ Allow traffic │ Block / Sinkhole       │  │
+│  └───────────────┴────────────────────────┘  │
+└──────────────────────┬───────────────────────┘
+                       │
+        ┌──────────────┴──────────────┐
+        ▼                             ▼
+┌──────────────────────┐   ┌──────────────────────┐
+│ 🛑 RPZ Enforcement    │   │ 🕳️ Sinkhole Engine   │
+│ - Domain blocking     │   │ - Redirect traffic   │
+│ - DNS policy control  │   │ - Malware analysis   │
+└──────────────────────┘   └──────────────────────┘
 
-🖥️ Client / Attacker VM
-│
-│ DNS Query (Port 53 / 5354)
-▼
-🌐 BIND DNS Resolver (RPZ Enabled)
-│
-│ logs all queries
-▼
-📄 /var/log/named/query.log
-│
-▼
-🐳 Docker Threat Parser Engine
-│
-├── 📥 Reads DNS logs
-├── 🔍 Extracts domains
-├── 🧠 Matches IOC feeds
-│ ├── URLHaus
-│ ├── ThreatFox
-│ └── OpenPhish
-│
-▼
-⚙️ Decision Engine
-│
-├── ✅ CLEAN → Allow DNS response
-└── ❌ MALICIOUS → Block / Sinkhole / NXDOMAIN
-│
-▼
-🚫 Enforcement Layer (DNS Security Actions)
-├── 🛑 RPZ Blocking
-├── 🕳️ Sinkhole Redirect
-└── 🚫 NXDOMAIN Response
-│
-▼
-📊 Logging & Monitoring
-├── docker logs dns-parser
-├── query classification logs
-└── threat detection output
-
+                       ▼
+┌──────────────────────────────────────────────┐
+│         📊 Logging & Monitoring Layer        │
+│                                              │
+│  - docker logs dns-parser                   │
+│  - DNS classification logs                  │
+│  - IOC match reports                        │
+│  - Threat detection output                  │
+└──────────────────────────────────────────────┘
 
 ---
 
