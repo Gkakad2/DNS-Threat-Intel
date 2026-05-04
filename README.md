@@ -19,39 +19,22 @@ It helps identify:
 
 ## 🏗️ Architecture
 
-DNS Threat Intelligence Pipeline
+## 🏗️ Architecture
 
-Client / Attacker VM
-        |
-        v
-BIND DNS Resolver (RPZ Enabled)
-        |
-        v
-DNS Query Logging (/var/log/named/query.log)
-        |
-        v
-Docker Threat Parser Engine
-        |
-        v
-IOC Matching Engine (URLHaus | ThreatFox | OpenPhish)
-        |
-        v
-Decision Engine
-        |
-        v
-+-------------------------------+
-|           CLEAN              |
-|        Allow DNS            |
-|                               |
-|         MALICIOUS           |
-|   Block / Sinkhole / NXDOMAIN|
-+-------------------------------+
-        |
-        v
-Enforcement Layer (RPZ / Sinkhole)
-        |
-        v
-Logging & Monitoring (docker logs + alerts)
+```mermaid
+flowchart TD
+
+A[Client / Attacker VM] --> B[BIND DNS Resolver (RPZ Enabled)]
+B --> C[DNS Query Logging (/var/log/named/query.log)]
+C --> D[Docker Threat Parser Engine]
+D --> E[IOC Matching Engine]
+E --> F[Decision Engine]
+
+F -->|Clean| G[Allow DNS Response]
+F -->|Malicious| H[Block / Sinkhole / NXDOMAIN]
+
+H --> I[RPZ Enforcement Layer]
+I --> J[Logging & Monitoring]
 
 ## ⚙️ Features
 
