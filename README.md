@@ -146,26 +146,26 @@ DNS-Threat-Intel/
 
 # 🧪 Testing Methodology
 
+## 🧪 Testing
+
 ### ✅ Test Clean Domain
 ```bash
 dig google.com @<DNS_SERVER_IP> -p 5354
-
 ❌ Test Malicious Domain
 dig evil-test.com @<DNS_SERVER_IP> -p 5354
-
-# 📊 Expected Behavior
+📊 Expected Behavior
 Domain Type	System Response
 Clean Domain	DNS resolution allowed
 Malicious Domain	Blocked / Sinkholed / NXDOMAIN
-# 📜 Logging & Observability
+📜 Logging & Observability
 DNS Logs
 tail -f /var/log/named/query.log
 Parser Logs
 docker logs -f dns-parser
-# 🚀 Deployment
+🚀 Deployment
 docker compose up --build -d
-
-#👨‍💻 Author
+👨‍💻 Author
 
 DNS Threat Intelligence Pipeline
 SOC / Cybersecurity / Threat Detection Project
+
