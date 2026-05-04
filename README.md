@@ -22,7 +22,7 @@ It helps identify:
 
 ```mermaid
 flowchart TD
-A[Client / Attacker VM] --> B[BIND DNS Resolver RPZ Enabled]
+A[Client VM] --> B[BIND DNS Resolver RPZ Enabled]
 B --> C[DNS Query Logging /var/log/named/query.log]
 C --> D[Docker Threat Parser Engine]
 D --> E[IOC Matching Engine URLHaus ThreatFox OpenPhish]
