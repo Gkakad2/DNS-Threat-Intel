@@ -19,7 +19,7 @@ It helps identify:
 
 ## 🏗️ Architecture
 
-DNS Threat Intelligence Pipeline Architecture
+DNS Threat Intelligence Pipeline
 
 Client / Attacker VM
         |
@@ -38,19 +38,20 @@ IOC Matching Engine (URLHaus | ThreatFox | OpenPhish)
         v
 Decision Engine
         |
-        +----------------------+
-        |                      |
-        v                      v
-   CLEAN                MALICIOUS
-   Allow DNS           Block / Sinkhole
-        |                      |
-        +----------+-----------+
-                   |
-                   v
-     Enforcement Layer (RPZ / Sinkhole / NXDOMAIN)
-                   |
-                   v
-     Logging & Monitoring (docker logs + DNS alerts)
+        v
++-------------------------------+
+|           CLEAN              |
+|        Allow DNS            |
+|                               |
+|         MALICIOUS           |
+|   Block / Sinkhole / NXDOMAIN|
++-------------------------------+
+        |
+        v
+Enforcement Layer (RPZ / Sinkhole)
+        |
+        v
+Logging & Monitoring (docker logs + alerts)
 
 ## ⚙️ Features
 
