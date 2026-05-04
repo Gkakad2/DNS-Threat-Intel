@@ -1,14 +1,7 @@
-# Docker
 *.tar
-
-# Logs
 *.log
-
-# Temp
 *.tmp
-
-# OS
-.DS_Store
-
-# Large feeds (optional if needed)
-parser/feeds/*.json
+.dns_offset
+.state_dns_offset
+blocked_domains.txt
+all_iocs.txt
